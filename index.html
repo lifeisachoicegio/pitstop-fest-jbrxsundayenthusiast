@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pit Stop Fest — JBR × Sunday Enthusiast</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --deep: #111111;
+    --panel: #161616;
+    --card: #1c1c1c;
+    --red: #e8001d;
+    --red-dim: #a3001a;
+    --yellow: #f5c400;
+    --white: #f0ede8;
+    --gray: #888;
+    --gray-light: #bbb;
+    --line: rgba(255,255,255,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ─── RACE LINE TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 59px,
+        rgba(255,255,255,0.018) 59px,
+        rgba(255,255,255,0.018) 60px
+      ),
+      repeating-linear-gradient(
+        180deg,
+        transparent,
+        transparent 59px,
+        rgba(255,255,255,0.012) 59px,
+        rgba(255,255,255,0.012) 60px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── DIAGONAL RACE STRIPE ─── */
+  .race-stripe {
+    position: absolute;
+    height: 4px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--yellow) 0px,
+      var(--yellow) 20px,
+      transparent 20px,
+      transparent 30px
+    );
+    width: 100%;
+    opacity: 0.85;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 6vw 4rem;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 70vw;
+    height: 140%;
+    background: conic-gradient(
+      from 220deg at 60% 40%,
+      transparent 0deg,
+      rgba(232,0,29,0.12) 40deg,
+      rgba(232,0,29,0.04) 90deg,
+      transparent 130deg
+    );
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+
+  .collab-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(232,0,29,0.12);
+    border: 1px solid rgba(232,0,29,0.35);
+    padding: 6px 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 2.5rem;
+    width: fit-content;
+  }
+
+  .collab-badge span { color: var(--gray); }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 600;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 16vw, 200px);
+    line-height: 0.88;
+    letter-spacing: -2px;
+    color: var(--white);
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-title .pit { display: block; }
+  .hero-title .stop {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(240,237,232,0.5);
+  }
+  .hero-title .fest {
+    display: block;
+    color: var(--red);
+  }
+
+  .hero-sub {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-date-block {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .hero-date-block::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    background: var(--red);
+  }
+
+  .hero-date-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 4px;
+  }
+
+  .hero-date-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .hero-flag {
+    position: absolute;
+    right: 5vw;
+    bottom: 8vh;
+    display: grid;
+    grid-template-columns: repeat(4, 28px);
+    grid-template-rows: repeat(4, 28px);
+    gap: 2px;
+    opacity: 0.18;
+  }
+
+  .hero-flag div:nth-child(odd) { background: #fff; }
+  .hero-flag div:nth-child(even) { background: transparent; border: 1px solid rgba(255,255,255,0.2); }
+
+  /* ─── SECTION GENERAL ─── */
+  section { position: relative; z-index: 1; }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.6rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 7vw, 88px);
+    line-height: 0.95;
+    color: var(--white);
+  }
+
+  /* ─── DAYS SECTION ─── */
+  .days-section {
+    padding: 6rem 6vw;
+    background: var(--deep);
+  }
+
+  .days-header {
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2rem;
+  }
+
+  .days-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .days-grid { grid-template-columns: 1fr; }
+    .hero-flag { display: none; }
+  }
+
+  .day-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .day-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .day-card.day1::before { background: var(--yellow); }
+  .day-card.day2::before { background: var(--red); }
+
+  .day-card-inner { padding: 2.5rem 2.5rem 2rem; }
+
+  .day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    line-height: 0.85;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.06);
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .day-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    margin-bottom: 1.2rem;
+  }
+
+  .day-tag.free {
+    background: rgba(245,196,0,0.12);
+    border: 1px solid rgba(245,196,0,0.35);
+    color: var(--yellow);
+  }
+
+  .day-tag.paid {
+    background: rgba(232,0,29,0.12);
+    border: 1px solid rgba(232,0,29,0.35);
+    color: var(--red);
+  }
+
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .day-date {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .event-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .event-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+
+  .event-item:last-child { border-bottom: none; }
+
+  .event-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .day1 .event-dot { background: var(--yellow); }
+  .day2 .event-dot { background: var(--red); }
+
+  .event-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--white);
+    flex: 1;
+  }
+
+  .event-time {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  .event-special {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .tag-night {
+    background: rgba(100,60,180,0.2);
+    border: 1px solid rgba(140,90,220,0.3);
+    color: #a07ee0;
+  }
+
+  .tag-star {
+    background: rgba(232,0,29,0.15);
+    border: 1px solid rgba(232,0,29,0.4);
+    color: var(--red);
+  }
+
+  .price-badge {
+    margin-top: 2rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .price-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .price-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+  }
+
+  .price-val.red { color: var(--red); }
+
+  /* ─── FEATURES ROW ─── */
+  .features-section {
+    padding: 5rem 6vw;
+    background: var(--black);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  @media (max-width: 900px) {
+    .features-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .feature-cell {
+    background: var(--black);
+    padding: 2.2rem 1.5rem;
+    text-align: center;
+    position: relative;
+    transition: background 0.25s;
+  }
+
+  .feature-cell:hover { background: var(--panel); }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 1rem;
+    display: block;
+    line-height: 1;
+  }
+
+  .feature-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .feature-desc {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* ─── TICKER ─── */
+  .ticker-wrap {
+    background: var(--red);
+    overflow: hidden;
+    padding: 10px 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ticker-inner {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 18s linear infinite;
+  }
+
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: #fff;
+    padding: 0 2rem;
+  }
+
+  .ticker-dot {
+    color: rgba(255,255,255,0.4);
+    font-size: 10px;
+    vertical-align: middle;
+    margin: 0 0.5rem;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ─── INFO SECTION ─── */
+  .info-section {
+    padding: 6rem 6vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6vw;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .info-section { grid-template-columns: 1fr; }
+  }
+
+  .info-graphic {
+    position: relative;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rpm-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+  }
+
+  .rpm-ring:nth-child(1) {
+    width: 340px; height: 340px;
+    border-color: rgba(255,255,255,0.04);
+  }
+  .rpm-ring:nth-child(2) {
+    width: 260px; height: 260px;
+    border-color: rgba(232,0,29,0.12);
+  }
+  .rpm-ring:nth-child(3) {
+    width: 180px; height: 180px;
+    border-color: rgba(232,0,29,0.25);
+    animation: spin 12s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .rpm-center {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 2px solid var(--red);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .rpm-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .rpm-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  .rpm-ring:nth-child(3)::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+  }
+
+  .info-text {}
+
+  .info-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 0.95;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-body {
+    font-size: 15px;
+    color: var(--gray-light);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .info-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-top: 2rem;
+  }
+
+  .spec-cell {
+    background: var(--panel);
+    padding: 1rem 1.2rem;
+  }
+
+  .spec-key {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 4px;
+  }
+
+  .spec-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--line);
+    padding: 4rem 6vw 3rem;
+    background: var(--deep);
+  }
+
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 0.9;
+  }
+
+  .footer-brand span { color: var(--red); }
+
+  .footer-collab {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-top: 0.5rem;
+  }
+
+  .footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--gray);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .checkered-footer {
+    display: grid;
+    grid-template-columns: repeat(8, 14px);
+    grid-template-rows: repeat(3, 14px);
+    gap: 1px;
+    opacity: 0.15;
+  }
+
+  .checkered-footer div:nth-child(odd) { background: #fff; }
+
+  /* ─── SCROLL ANIMATIONS ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── CUSTOM SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="collab-badge">
+    JBR <span>×</span> SUNDAY ENTHUSIAST &nbsp;·&nbsp; MINI FESTIVAL
+  </div>
+  <p class="hero-eyebrow">Presented by JBR × Sunday Enthusiast</p>
+  <h1 class="hero-title">
+    <span class="pit">PIT</span>
+    <span class="stop">STOP</span>
+    <span class="fest">FEST</span>
+  </h1>
+  <div class="hero-sub">
+    <div class="hero-date-block">
+      <div class="hero-date-label">Day 1 — Free Entry</div>
+      <div class="hero-date-val">SAT — TBD<br><span style="font-size:14px;color:var(--gray)">Pop Up · Mural · Art · DJ Night</span></div>
+    </div>
+    <div class="hero-date-block">
+      <div class="hero-date-label">Day 2 — Rp 50.000</div>
+      <div class="hero-date-val">SUN — TBD<br><span style="font-size:14px;color:var(--gray)">Gigs · Guest Star · Riding</span></div>
+    </div>
+  </div>
+
+  <!-- Decorative checkered flag -->
+  <div class="hero-flag">
+    <div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div>
+  </div>
+</section>
+
+<!-- RACE STRIPE -->
+<div style="position:relative;z-index:2;">
+  <div class="race-stripe"></div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-item">PIT STOP FEST</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">JBR × SUNDAY ENTHUSIAST</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">POP UP MARKET</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">ART EXHIBITION</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">LIVE MUSIC GIGS</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">MURAL</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">RIDING BARENG</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">PIT STOP FEST</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">JBR × SUNDAY ENTHUSIAST</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">POP UP MARKET</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">ART EXHIBITION</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">LIVE MUSIC GIGS</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">MURAL</span>
+    <span class="ticker-dot">◆</span>
+    <span class="ticker-item">RIDING BARENG</span>
+    <span class="ticker-dot">◆</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features-section">
+  <div class="features-grid">
+    <div class="feature-cell reveal">
+      <span class="feature-icon">🛍️</span>
+      <div class="feature-name">Pop Up Market</div>
+      <div class="feature-desc">Tenant lokal pilihan, produk unik dan eksklusif</div>
+    </div>
+    <div class="feature-cell reveal">
+      <span class="feature-icon">🎨</span>
+      <div class="feature-name">Art Exhibition</div>
+      <div class="feature-desc">Pameran karya seni dari seniman komunitas</div>
+    </div>
+    <div class="feature-cell reveal">
+      <span class="feature-icon">🖌️</span>
+      <div class="feature-name">Mural</div>
+      <div class="feature-desc">Live mural & mural di helm eksklusif</div>
+    </div>
+    <div class="feature-cell reveal">
+      <span class="feature-icon">🏍️</span>
+      <div class="feature-name">Riding Bareng</div>
+      <div class="feature-desc">Konvoi bersama komunitas riders JBR</div>
+    </div>
+    <div class="feature-cell reveal">
+      <span class="feature-icon">🎸</span>
+      <div class="feature-name">Live Gigs</div>
+      <div class="feature-desc">Penampilan band lokal + guest star malam Day 2</div>
+    </div>
+  </div>
+</div>
+
+<!-- DAYS SECTION -->
+<div class="days-section">
+  <div class="days-header reveal">
+    <div>
+      <div class="section-label">Lineup Acara</div>
+      <div class="section-title">TWO DAYS<br>ONE CULTURE</div>
+    </div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--gray);max-width:280px;line-height:1.6;">
+      Dua hari penuh kegiatan budaya, seni, musik, dan komunitas motor yang menyatu dalam satu festival.
+    </div>
+  </div>
+
+  <div class="days-grid">
+
+    <!-- DAY 1 -->
+    <div class="day-card day1 reveal">
+      <div class="day-num">1</div>
+      <div class="day-card-inner">
+        <div class="day-tag free">✦ Free Entry</div>
+        <div class="day-title">DAY ONE</div>
+        <div class="day-date">Sabtu · Open for All</div>
+
+        <ul class="event-list">
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Pop Up Market</span>
+            <span class="event-time">Seharian</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Art Exhibition</span>
+            <span class="event-time">Seharian</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Live Mural</span>
+            <span class="event-time">Seharian</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">DJ Performance</span>
+            <span class="event-time">Malam</span>
+            <span class="event-special tag-night">Night</span>
+          </li>
+        </ul>
+
+        <div class="price-badge">
+          <span class="price-label">Tiket Masuk</span>
+          <span class="price-val">GRATIS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-card day2 reveal">
+      <div class="day-num">2</div>
+      <div class="day-card-inner">
+        <div class="day-tag paid">◈ Paid Entry</div>
+        <div class="day-title">DAY TWO</div>
+        <div class="day-date">Minggu · Ticketed Event</div>
+
+        <ul class="event-list">
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Pop Up Market</span>
+            <span class="event-time">Seharian</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Art Exhibition</span>
+            <span class="event-time">Seharian</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Mural di Helm</span>
+            <span class="event-time">Siang</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Riding Bareng</span>
+            <span class="event-time">Pagi</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Live Music Gigs</span>
+            <span class="event-time">Sore–Malam</span>
+          </li>
+          <li class="event-item">
+            <span class="event-dot"></span>
+            <span class="event-name">Guest Star</span>
+            <span class="event-time">Malam</span>
+            <span class="event-special tag-star">★ Star</span>
+          </li>
+        </ul>
+
+        <div class="price-badge">
+          <span class="price-label">Tiket Masuk</span>
+          <span class="price-val red">Rp 50.000</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- INFO SECTION -->
+<div class="info-section">
+  <div class="info-graphic reveal">
+    <div class="rpm-ring"></div>
+    <div class="rpm-ring"></div>
+    <div class="rpm-ring"></div>
+    <div class="rpm-center">
+      <div class="rpm-val">2</div>
+      <div class="rpm-label">DAYS</div>
+    </div>
+  </div>
+
+  <div class="info-text reveal">
+    <div class="section-label">Tentang Acara</div>
+    <h2 class="info-heading">WHERE ART<br>MEETS THE<br><span style="color:var(--red)">ROAD</span></h2>
+    <p class="info-body">
+      Pit Stop Fest adalah mini festival kolaborasi JBR dan Sunday Enthusiast yang mempertemukan dunia otomotif, seni, dan musik dalam satu ruang yang autentik. Dari pop up market hingga live gigs, setiap sudut event dirancang untuk komunitas.
+    </p>
+    <div class="info-specs">
+      <div class="spec-cell">
+        <div class="spec-key">Organizer</div>
+        <div class="spec-val">JBR × Sunday Enthusiast</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-key">Durasi</div>
+        <div class="spec-val">2 Hari Penuh</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-key">Day 1</div>
+        <div class="spec-val" style="color:var(--yellow)">FREE</div>
+      </div>
+      <div class="spec-cell">
+        <div class="spec-key">Day 2</div>
+        <div class="spec-val" style="color:var(--red)">Rp 50.000</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER RACE STRIPE -->
+<div style="position:relative;z-index:2;">
+  <div class="race-stripe"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">PIT STOP<br><span>FEST</span></div>
+      <div class="footer-collab">JBR × Sunday Enthusiast</div>
+    </div>
+    <div class="checkered-footer">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Pit Stop Fest — JBR × Sunday Enthusiast</span>
+    <span style="color:var(--red);letter-spacing:3px;font-size:13px;">FULL THROTTLE ON CULTURE</span>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
